@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>FeynmanChat Test</title>
+</head>
+<body>
+  <h1>FeynmanChat'e Hoş Geldin</h1>
+
+  <form id="askForm">
+    <label>Karakter seç:</label><br />
+    <select name="character" id="character">
+      <option value="cocuk">Çocuk</option>
+      <option value="ogrenci">Üniversiteli</option>
+      <option value="hoca">Hoca</option>
+    </select><br /><br />
+
+    <label>Konu gir:</label><br />
+    <input type="text" id="topic" name="topic" required><br /><br />
+
+    <button type="submit">Soruları Al</button>
+  </form>
+
+  <h2>Gelen Sorular:</h2>
+  <ul id="results"></ul>
+
+  <script>
+    document.getElementById("askForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const character = document.getElementById("character").value;
+      const topic = document.getElementById("topic").value;
+
+      const response = await fetch("/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ character, topic })
+      });
+
+      const data = await response.json();
+      const resultList = document.getElementById("results");
+      resultList.innerHTML = "";
+
+      if (data.questions) {
+        data.questions.forEach(q => {
+          const li = document.createElement("li");
+          li.textContent = q;
+          resultList.appendChild(li);
+        });
+      } else {
+        resultList.innerHTML = "<li>Hata oluştu</li>";
+      }
+    });
+  </script>
+</body>
+</html>
