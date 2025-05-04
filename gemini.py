@@ -38,7 +38,7 @@ def generate_questions(character: str, topic: str) -> dict:
 
     return {"questions": questions[:3]}  # En fazla 3 soru döndür
 
-def start_conversation(session_id: str, character: str, user_input: str) -> dict:
+def start_conversation(user_id: int, session_id: str, character: str, user_input: str) -> dict:
     """Kullanıcı ve seçilen karakter arasında sohbet başlatır veya devam ettirir"""
     try:
         # Karakter talimatlarını getir
@@ -47,7 +47,7 @@ def start_conversation(session_id: str, character: str, user_input: str) -> dict
             raise ValueError(f"Geçersiz karakter: {character}")
         
         # Konuşma geçmişini getir
-        history = get_conversation(session_id)
+        history = get_conversation(user_id, session_id)
         
         # Konuşma geçmişi kontrolü
         # Son 5 mesajı al (token limitlerini aşmamak için)
@@ -69,8 +69,8 @@ def start_conversation(session_id: str, character: str, user_input: str) -> dict
             ai_reply = response.text.strip()
             
             # DB'ye gerçek kullanıcı girdisi ve AI cevabını kaydet
-            save_message(session_id, character, "user", user_input)
-            save_message(session_id, character, "ai", ai_reply)
+            save_message(user_id, session_id, character, "user", user_input)
+            save_message(user_id, session_id, character, "ai", ai_reply)
             
             return {"reply": ai_reply}
         

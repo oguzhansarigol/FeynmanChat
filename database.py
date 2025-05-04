@@ -2,60 +2,92 @@ import sqlite3
 import os
 import json
 from datetime import datetime
+import bcrypt
 
 DB_PATH = "conversations.db"
 
 def init_db():
-    """Veritabanını başlat ve gerekli tabloları oluştur"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    
-    # Mesaj tablosu oluştur
+
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL
+    )
+    ''')
+
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS messages (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
         session_id TEXT NOT NULL,
         character TEXT NOT NULL,
         role TEXT NOT NULL,
         content TEXT NOT NULL,
-        timestamp TEXT NOT NULL
+        timestamp TEXT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id)
     )
     ''')
-    
+
     conn.commit()
     conn.close()
 
-def save_message(session_id, character, role, content):
-    """Mesajı veritabanına kaydet
-    
-    Args:
-        session_id (str): Konuşma oturumu ID'si
-        character (str): Seçilen karakter (cocuk, universiteli, hoca)
-        role (str): Mesajı gönderen (user/ai)
-        content (str): Mesaj içeriği
-    """
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+def verify_password(password: str, hashed: str) -> bool:
+    return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
+
+def create_user(username, password):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    
+    try:
+        hashed_pw = hash_password(password)
+        cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_pw))
+        conn.commit()
+    except sqlite3.IntegrityError:
+        raise Exception("Bu kullanıcı adı zaten alınmış.")
+    finally:
+        conn.close()
+
+def get_user(username, password):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, password FROM users WHERE username = ?", (username,))
+    user = cursor.fetchone()
+    conn.close()
+
+    if user and verify_password(password, user[1]):
+        return user[0]  # user_id
+    return None
+
+def save_message(user_id, session_id, character, role, content):
+    """Mesajı veritabanına kaydet"""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
     timestamp = datetime.now().isoformat()
-    
+
     cursor.execute(
-        "INSERT INTO messages (session_id, character, role, content, timestamp) VALUES (?, ?, ?, ?, ?)",
-        (session_id, character, role, content, timestamp)
+        "INSERT INTO messages (user_id, session_id, character, role, content, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
+        (user_id, session_id, character, role, content, timestamp)
     )
-    
+
     conn.commit()
     conn.close()
 
-def get_conversation(session_id):
-    """Belirli bir oturum için konuşma geçmişini getir"""
+
+def get_conversation(user_id, session_id):
+    """Belirli bir kullanıcı ve oturum için konuşma geçmişini getir"""
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         
         cursor.execute(
-            "SELECT role, content FROM messages WHERE session_id = ? ORDER BY timestamp ASC",
-            (session_id,)
+            "SELECT role, content FROM messages WHERE user_id = ? AND session_id = ? ORDER BY timestamp ASC",
+            (user_id, session_id)
         )
         
         messages = cursor.fetchall()
@@ -68,7 +100,6 @@ def get_conversation(session_id):
         # Gemini API formatında geçmiş oluştur
         history = []
         for role, content in messages:
-            # Gemini API'nin beklediği format
             gemini_role = "user" if role == "user" else "model"
             history.append({"role": gemini_role, "parts": [{"text": content}]})
         

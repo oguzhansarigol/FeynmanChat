@@ -1,6 +1,7 @@
 // Oturum ID'si
 let sessionId = localStorage.getItem('feynmanChatSessionId') || crypto.randomUUID();
 localStorage.setItem('feynmanChatSessionId', sessionId);
+let userId = localStorage.getItem('feynmanChatUserId') || null;
 
 // Aktif karakter
 let currentCharacter = '';
@@ -121,11 +122,13 @@ document.addEventListener("DOMContentLoaded", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          user_id: parseInt(userId),        //  EKLENDİ
           session_id: sessionId,
           character: currentCharacter,
           message
         })
       });
+      
 
       if (!res.ok) {
         throw new Error(`HTTP hata! Durum: ${res.status}`);

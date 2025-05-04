@@ -10,6 +10,7 @@ class QuestionResponse(BaseModel):
 
 # Sohbet başlatma ve devam ettirme için
 class ChatRequest(BaseModel):
+    user_id: int 
     session_id: str       # UUID olabilir, frontend'de üretilip gönderilir
     character: str
     message: str           # Kullanıcının yazdığı mesaj

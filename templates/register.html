@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Kayıt Ol - FeynmanChat</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Kayıt Ol</h2>
+    <form id="register-form">
+      <label>Kullanıcı Adı:</label>
+      <input type="text" id="register-username" required><br><br>
+
+      <label>Şifre:</label>
+      <input type="password" id="register-password" required><br><br>
+
+      <button type="submit">Kayıt Ol</button>
+    </form>
+
+    <p>Zaten hesabınız var mı? <a href="/login">Giriş Yap</a></p>
+  </div>
+
+  <script>
+    const form = document.getElementById("register-form");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("register-username").value;
+      const password = document.getElementById("register-password").value;
+
+      const res = await fetch("/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      if (res.ok) {
+        alert("Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz.");
+        window.location.href = "/login";
+      } else {
+        const data = await res.json();
+        alert("Kayıt başarısız: " + data.detail);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -351,4 +351,23 @@
     .end-btn i {
       margin-right: 0;
     }
+    .logout-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #eee;
+      border: 1px solid #ccc;
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    
+    .logout-btn:hover {
+      background: #f2dede;
+      color: #a94442;
+      border-color: #ebccd1;
+    }
+    
   }
