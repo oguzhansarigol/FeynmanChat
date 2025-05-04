@@ -1,58 +1,66 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <title>FeynmanChat Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FeynmanChat - AI Mentor</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <h1>FeynmanChat'e Hoş Geldin</h1>
-
-  <form id="askForm">
-    <label>Karakter seç:</label><br />
-    <select name="character" id="character">
-      <option value="cocuk">Çocuk</option>
-      <option value="ogrenci">Üniversiteli</option>
-      <option value="hoca">Hoca</option>
-    </select><br /><br />
-
-    <label>Konu gir:</label><br />
-    <input type="text" id="topic" name="topic" required><br /><br />
-
-    <button type="submit">Soruları Al</button>
-  </form>
-
-  <h2>Gelen Sorular:</h2>
-  <ul id="results"></ul>
-
-  <script>
-    document.getElementById("askForm").addEventListener("submit", async function (e) {
-      e.preventDefault();
-
-      const character = document.getElementById("character").value;
-      const topic = document.getElementById("topic").value;
-
-      const response = await fetch("/ask", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ character, topic })
-      });
-
-      const data = await response.json();
-      const resultList = document.getElementById("results");
-      resultList.innerHTML = "";
-
-      if (data.questions) {
-        data.questions.forEach(q => {
-          const li = document.createElement("li");
-          li.textContent = q;
-          resultList.appendChild(li);
-        });
-      } else {
-        resultList.innerHTML = "<li>Hata oluştu</li>";
-      }
-    });
-  </script>
+    <div class="container">
+        <header>
+            <h1>FeynmanChat</h1>
+            <p>Farklı karakterlerle soru-cevap yaparak öğrenin</p>
+        </header>
+        
+        <!-- Karakter seçim kartları -->
+        <div class="character-selection">
+            <div class="character-card" data-character="cocuk">
+                <div class="character-image">
+                    <img src="/static/images/cocuk.png" alt="Meraklı Çocuk" onerror="this.src='/static/images/placeholder-cocuk.png'">
+                </div>
+                <div class="character-name">Meraklı Çocuk</div>
+            </div>
+            
+            <div class="character-card" data-character="universiteli">
+                <div class="character-image">
+                    <img src="/static/images/universiteli.png" alt="Araştırmacı Öğrenci" onerror="this.src='/static/images/placeholder-universiteli.png'">
+                </div>
+                <div class="character-name">Araştırmacı Öğrenci</div>
+            </div>
+            
+            <div class="character-card" data-character="hoca">
+                <div class="character-image">
+                    <img src="/static/images/hoca.png" alt="Profesör" onerror="this.src='/static/images/placeholder-hoca.png'">
+                </div>
+                <div class="character-name">Profesör</div>
+            </div>
+        </div>
+        
+        <div class="chat-container">
+            <div class="chat-header">
+                <div id="current-character">Karakteri seçin</div>
+                <button id="end-conversation" class="end-btn" title="Konuşmayı Sonlandır">
+                    <i class="fas fa-times"></i> Konuşmayı Sonlandır
+                </button>
+            </div>
+            
+            <div id="chatbox">
+                <div class="system-message">
+                    <div class="message-content">
+                        Karakterinizi seçin ve istediğiniz konuda sohbete başlayın.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <textarea id="message" placeholder="Bir konu veya soru yazın..." rows="2"></textarea>
+                <button id="send-btn">Gönder</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/script.js"></script>
 </body>
 </html>

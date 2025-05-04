@@ -4,25 +4,25 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from schemas import QuestionRequest, QuestionResponse
-from gemini import generate_questions
+from schemas import QuestionRequest, QuestionResponse, ChatRequest, ChatResponse
+from gemini import generate_questions, start_conversation
 from database import init_db
 
 # Veritabanını başlat
 init_db()
 
-# FastAPI app
+# FastAPI uygulaması
 app = FastAPI(
     title="FeynmanChat - AI Mentor App",
-    description="Karakter tabanlı soru üretimi yapan yapay zekâ destekli öğrenme uygulaması.",
-    version="1.0.0"
+    description="Karakter tabanlı soru üretimi ve sohbet deneyimi sunan yapay zekâ destekli öğrenme uygulaması.",
+    version="2.0.0"
 )
 
-# Statik ve template dizinlerini bağla
+# Statik dosya ve template dizinleri
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# CORS ayarı
+# CORS (frontend erişimi için)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -31,12 +31,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Ana sayfa (HTML UI)
+# Ana sayfa
 @app.get("/", response_class=HTMLResponse)
 def get_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-# API endpoint
+# Eski sistem: Konuya özel 3 soru üret
 @app.post("/ask", response_model=QuestionResponse)
 async def ask_questions(payload: QuestionRequest):
     try:
@@ -46,3 +46,15 @@ async def ask_questions(payload: QuestionRequest):
         raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Sunucu hatası: " + str(e))
+
+# Yeni sistem: Karakterle sürekli konuşma
+@app.post("/chat", response_model=ChatResponse)
+async def chat_with_character(payload: ChatRequest):
+    try:
+        result = start_conversation(payload.session_id, payload.character, payload.message)
+        return ChatResponse(**result)  # ✅ garanti dönüşüm
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Sunucu hatası: " + str(e))
+
