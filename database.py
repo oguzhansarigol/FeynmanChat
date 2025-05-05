@@ -31,6 +31,18 @@ def init_db():
     )
     ''')
 
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS session_scores (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        session_id TEXT NOT NULL,
+        character TEXT NOT NULL,
+        avg_score REAL NOT NULL,
+        timestamp TEXT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id)
+    )
+    ''')
+    
     conn.commit()
     conn.close()
 
@@ -107,3 +119,27 @@ def get_conversation(user_id, session_id):
     except Exception as e:
         print(f"Konuşma geçmişi alınırken hata: {str(e)}")
         return []  # Hata durumunda boş liste döndür
+
+def save_session_score(user_id, session_id, character, session_ratings):
+    """Oturum puan ortalamasını kaydet"""
+    if session_id not in session_ratings:
+        print("Puanlar bulunamadı.")
+        return
+
+    scores = session_ratings[session_id]
+    avg_score = sum(scores) / len(scores)
+
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "INSERT INTO session_scores (user_id, session_id, character, avg_score, timestamp) VALUES (?, ?, ?, ?, ?)",
+            (user_id, session_id, character, avg_score, datetime.now().isoformat())
+        )
+
+        conn.commit()
+        conn.close()
+        print(f"Ortalama puan {avg_score} kaydedildi.")
+    except Exception as e:
+        print(f"Veritabanı hatası: {str(e)}")
