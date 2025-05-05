@@ -2,46 +2,54 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Giriş Yap - FeynmanChat</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giriş Yap</title>
+  <link rel="stylesheet" href="/static/auth.css">
 </head>
 <body>
-  <div class="container">
-    <h2>Giriş Yap</h2>
-    <form id="login-form">
-      <label>Kullanıcı Adı:</label>
-      <input type="text" id="login-username" required><br><br>
+  <div class="auth-container">
+    <div class="auth-right"></div>
+    <div class="auth-left">
+      <div class="auth-content">
+        <h2>Hoşgeldin!</h2>
+        <p>Konunu seç, soruları cevapla ve öğrenmeye başla.</p>
 
-      <label>Şifre:</label>
-      <input type="password" id="login-password" required><br><br>
+        <form id="login-form">
+          <div class="form-group">
+            <input type="text" id="login-username" placeholder="Email" required>
+          </div>
+          <div class="form-group">
+            <input type="password" id="login-password" placeholder="Password" required>
+          </div>
+          <div class="form-group">
+            <button type="submit">Giriş Yap</button>
+          </div>
+        </form>
 
-      <button type="submit">Giriş Yap</button>
-    </form>
-
-    <p>Hesabınız yok mu? <a href="/register">Kayıt Ol</a></p>
+        <div class="footer-text">
+          Henüz kayıt olmadın mı? <a href="/register">Kayıt Ol</a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
     const form = document.getElementById("login-form");
-
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const username = document.getElementById("login-username").value;
       const password = document.getElementById("login-password").value;
-
       const res = await fetch("/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
       });
-
       if (res.ok) {
         const data = await res.json();
         localStorage.setItem("feynmanChatUserId", data.user_id);
-        window.location.href = "/chat"; // index.html'e yönlendir
+        window.location.href = "/chat";
       } else {
-        alert("Giriş başarısız. Kullanıcı adı veya şifre hatalı.");
+        alert("Giriş başarısız.");
       }
     });
   </script>

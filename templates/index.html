@@ -1,82 +1,94 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FeynmanChat - AI Mentor</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FeynmanChat - AI Mentor</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>FeynmanChat</h1>
-            <button onclick="logout()" class="logout-btn">Çıkış Yap</button>
+  <div class="layout">
+    <!-- Sol panel: Geçmiş -->
+    <div id="historySidebar" class="history-sidebar">
+      <h3>Geçmiş</h3>
+      <div class="chat-history-list">
+        <div class="loading">Yükleniyor...</div>
+      </div>
+    </div>
 
-            <p>Farklı karakterlerle soru-cevap yaparak öğrenin</p>
+    <!-- Sağ: Ana içerik -->
+    <div class="main-content">
+      <div class="container">
+        <header>
+          <h1>FeynmanChat</h1>
+          <button onclick="logout()" class="logout-btn">Çıkış Yap</button>
+          <p>Farklı karakterlerle soru-cevap yaparak öğrenin</p>
         </header>
-        
+
         <!-- Karakter seçim kartları -->
         <div class="character-selection">
-            <div class="character-card" data-character="cocuk">
-                <div class="character-image">
-                    <img src="/static/images/cocuk.png" alt="Meraklı Çocuk" onerror="this.src='/static/images/placeholder-cocuk.png'">
-                </div>
-                <div class="character-name">Meraklı Çocuk</div>
+          <div class="character-card" data-character="cocuk">
+            <div class="character-image">
+              <img src="/static/images/cocuk.png" alt="Meraklı Çocuk" onerror="this.src='/static/images/placeholder-cocuk.png'" />
             </div>
-            
-            <div class="character-card" data-character="universiteli">
-                <div class="character-image">
-                    <img src="/static/images/universiteli.png" alt="Araştırmacı Öğrenci" onerror="this.src='/static/images/placeholder-universiteli.png'">
-                </div>
-                <div class="character-name">Araştırmacı Öğrenci</div>
+            <div class="character-name">Meraklı Çocuk</div>
+          </div>
+
+          <div class="character-card" data-character="universiteli">
+            <div class="character-image">
+              <img src="/static/images/universiteli.png" alt="Araştırmacı Öğrenci" onerror="this.src='/static/images/placeholder-universiteli.png'" />
             </div>
-            
-            <div class="character-card" data-character="hoca">
-                <div class="character-image">
-                    <img src="/static/images/hoca.png" alt="Profesör" onerror="this.src='/static/images/placeholder-hoca.png'">
-                </div>
-                <div class="character-name">Profesör</div>
+            <div class="character-name">Araştırmacı Öğrenci</div>
+          </div>
+
+          <div class="character-card" data-character="hoca">
+            <div class="character-image">
+              <img src="/static/images/hoca.png" alt="Profesör" onerror="this.src='/static/images/placeholder-hoca.png'" />
             </div>
+            <div class="character-name">Profesör</div>
+          </div>
         </div>
-        
+
         <div class="chat-container">
-            <div class="chat-header">
-                <div id="current-character">Karakteri seçin</div>
-                <button id="end-conversation" class="end-btn" title="Konuşmayı Sonlandır">
-                    <i class="fas fa-times"></i> Konuşmayı Sonlandır
-                </button>
+          <div class="chat-header">
+            <div id="current-character">Karakteri seçin</div>
+            <button id="end-conversation" class="end-btn" title="Konuşmayı Sonlandır">
+              <i class="fas fa-times"></i> Konuşmayı Sonlandır
+            </button>
+          </div>
+
+          <div id="chatbox">
+            <div class="system-message">
+              <div class="message-content">
+                Karakterinizi seçin ve istediğiniz konuda sohbete başlayın.
+              </div>
             </div>
-            
-            <div id="chatbox">
-                <div class="system-message">
-                    <div class="message-content">
-                        Karakterinizi seçin ve istediğiniz konuda sohbete başlayın.
-                    </div>
-                </div>
-            </div>
-            
-            <div class="input-area">
-                <textarea id="message" placeholder="Bir konu veya soru yazın..." rows="2"></textarea>
-                <button id="send-btn">Gönder</button>
-            </div>
+          </div>
+
+          <div class="input-area">
+            <textarea id="message" placeholder="Bir konu veya soru yazın..." rows="2"></textarea>
+            <button id="send-btn">Gönder</button>
+          </div>
         </div>
-    </div>
-    <script>
-        function logout() {
-          localStorage.removeItem("feynmanChatUserId");
-          localStorage.removeItem("feynmanChatSessionId"); // isteğe bağlı
-          window.location.href = "/login";
-        }
-      </script>
-      
-    <script>
-        // Giriş kontrolü
-        if (!localStorage.getItem("feynmanChatUserId")) {
-            window.location.href = "/login";
-                                  }
-    </script>
-      
-    <script src="/static/script.js"></script>
+      </div> <!-- container -->
+    </div> <!-- main-content -->
+  </div> <!-- layout -->
+
+  <script>
+    function logout() {
+      localStorage.removeItem("feynmanChatUserId");
+      localStorage.removeItem("feynmanChatSessionId");
+      window.location.href = "/login";
+    }
+  </script>
+
+  <script>
+    if (!localStorage.getItem("feynmanChatUserId")) {
+      window.location.href = "/login";
+    }
+  </script>
+
+  <script src="/static/script.js"></script>
 </body>
 </html>

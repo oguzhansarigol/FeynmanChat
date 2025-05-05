@@ -2,23 +2,35 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kayıt Ol - FeynmanChat</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/auth.css">
 </head>
 <body>
-  <div class="container">
-    <h2>Kayıt Ol</h2>
-    <form id="register-form">
-      <label>Kullanıcı Adı:</label>
-      <input type="text" id="register-username" required><br><br>
+  <div class="auth-container">
+    <div class="auth-right"></div>
+    <div class="auth-left">
+      <div class="auth-content">
+        <h2>Kayıt Ol</h2>
+        <p>Hemen kayıt olarak öğrenme yolculuğuna başla.</p>
 
-      <label>Şifre:</label>
-      <input type="password" id="register-password" required><br><br>
+        <form id="register-form">
+          <div class="form-group">
+            <input type="text" id="register-username" placeholder="Kullanıcı Adı" required>
+          </div>
+          <div class="form-group">
+            <input type="password" id="register-password" placeholder="Şifre" required>
+          </div>
+          <div class="form-group">
+            <button type="submit">Kayıt Ol</button>
+          </div>
+        </form>
 
-      <button type="submit">Kayıt Ol</button>
-    </form>
-
-    <p>Zaten hesabınız var mı? <a href="/login">Giriş Yap</a></p>
+        <div class="footer-text">
+          Zaten hesabınız var mı? <a href="/login">Giriş Yap</a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>

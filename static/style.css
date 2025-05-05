@@ -370,4 +370,48 @@
       border-color: #ebccd1;
     }
     
+    /* history  chat */
+    .layout {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .history-sidebar {
+      width: 220px;
+      background: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      height: 700px;
+      overflow-y: auto;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .history-sidebar h3 {
+      margin-top: 0;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+    
+    .chat-history-list {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .chat-history-item {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 8px;
+      cursor: pointer;
+      background: #f9f9f9;
+      transition: background 0.2s ease;
+      font-size: 0.9rem;
+    }
+    
+    .chat-history-item:hover {
+      background: #e6f0ff;
+    }
+    
   }

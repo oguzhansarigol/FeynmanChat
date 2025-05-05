@@ -1,13 +1,13 @@
-// Oturum ID'si
-let sessionId = localStorage.getItem('feynmanChatSessionId') || crypto.randomUUID();
-localStorage.setItem('feynmanChatSessionId', sessionId);
-let userId = localStorage.getItem('feynmanChatUserId') || null;
-
-// Aktif karakter
+// Global değişkenler
+let userId = localStorage.getItem('feynmanChatUserId');
+let sessionId = localStorage.getItem('feynmanChatSessionId');
 let currentCharacter = '';
-
-// Konuşma durumu (aktif/sonlandırılmış)
 let isConversationActive = false;
+
+// DOM elementleri
+const messageInput = document.getElementById("message");
+const sendBtn = document.getElementById("send-btn");
+const chatBox = document.getElementById("chatbox");
 
 // Karakter isimleri ve görünen adları
 const characterNames = {
@@ -16,12 +16,116 @@ const characterNames = {
   'hoca': 'Profesör'
 };
 
+// Oturum ID'si oluştur (eğer yoksa)
+if (!sessionId) {
+  sessionId = crypto.randomUUID();
+  localStorage.setItem('feynmanChatSessionId', sessionId);
+}
+
+// Konuşmayı sonlandır fonksiyonu
+function endConversation() {
+  isConversationActive = false;
+  document.querySelector(".chat-container").classList.add("conversation-ended");
+  messageInput.disabled = true;
+  sendBtn.disabled = true;
+}
+
+// Konuşmayı aktifleştir fonksiyonu
+function enableConversation() {
+  isConversationActive = true;
+  document.querySelector(".chat-container").classList.remove("conversation-ended");
+
+  if (messageInput && sendBtn) {
+    messageInput.disabled = false;
+    sendBtn.disabled = false;
+  }
+}
+
+// Önceki oturumu yükle
+async function loadPreviousSession(sessionId) {
+  const chatBox = document.getElementById("chatbox");
+  chatBox.innerHTML = `<div class="system-message"><div class="message-content">Önceki konuşma yükleniyor...</div></div>`;
+
+  try {
+    const res = await fetch(`/chat-messages/${userId}/${sessionId}`);
+    const data = await res.json();
+
+    if (!data.messages || data.messages.length === 0) {
+      chatBox.innerHTML = `<div class="system-message"><div class="message-content">Bu oturuma ait mesaj bulunamadı.</div></div>`;
+      return;
+    }
+
+    // İlk mesajdan karakteri belirle
+    currentCharacter = data.messages.find(msg => msg.role !== "system")?.character;
+    if (currentCharacter) {
+      document.getElementById("current-character").textContent = characterNames[currentCharacter];
+    }
+
+    chatBox.innerHTML = ''; // Mevcut içeriği temizle
+    
+    data.messages.forEach(msg => {
+      if (msg.role === "system") return; // Sistem mesajlarını gösterme
+      
+      const messageEl = document.createElement("div");
+      messageEl.className = `message ${msg.role === "user" ? "user-message" : "ai-message"}`;
+      
+      if (msg.role !== "user") {
+        messageEl.setAttribute("data-character", msg.character);
+      }
+
+      messageEl.innerHTML = `
+        <div class="message-header">${msg.role === "user" ? "Sen" : characterNames[msg.character]}</div>
+        <div class="message-content">${msg.content}</div>
+      `;
+      chatBox.appendChild(messageEl);
+    });
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+    isConversationActive = true;
+    enableConversation();
+  } catch (err) {
+    chatBox.innerHTML = `<div class="error-message">Mesajlar getirilemedi: ${err.message}</div>`;
+  }
+}
+
+// Konuşma geçmişini yükle
+async function loadChatHistory() {
+  if (!userId) return;
+  
+  const sidebar = document.getElementById("historySidebar");
+  const listEl = sidebar.querySelector(".chat-history-list");
+  listEl.innerHTML = `<div class="loading">Yükleniyor...</div>`;
+
+  try {
+    const res = await fetch(`/chat-history/${userId}`);
+    const data = await res.json();
+
+    listEl.innerHTML = "";
+
+    data.sessions.forEach(session => {
+      const item = document.createElement("div");
+      item.className = "chat-history-item";
+      item.textContent = `${session.character} — ${session.first_message.slice(0, 40)}...`;
+      item.onclick = async () => {
+        sessionId = session.session_id;
+        localStorage.setItem("feynmanChatSessionId", sessionId);
+        await loadPreviousSession(sessionId);
+      };
+      listEl.appendChild(item);
+    });
+
+    if (data.sessions.length === 0) {
+      listEl.innerHTML = "<div style='color: #888;'>Henüz konuşma geçmişiniz yok.</div>";
+    }
+  } catch (err) {
+    listEl.innerHTML = `<div class="error">Geçmiş yüklenemedi: ${err.message}</div>`;
+  }
+}
+
+// Sayfa yüklendiğinde
 document.addEventListener("DOMContentLoaded", () => {
   const characterCards = document.querySelectorAll(".character-card");
   const currentCharacterDisplay = document.getElementById("current-character");
-  const messageInput = document.getElementById("message");
-  const sendBtn = document.getElementById("send-btn");
-  const chatBox = document.getElementById("chatbox");
   const endConversationBtn = document.getElementById("end-conversation");
   
   // Loading göstergesi oluştur
@@ -122,14 +226,13 @@ document.addEventListener("DOMContentLoaded", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          user_id: parseInt(userId),        //  EKLENDİ
+          user_id: parseInt(userId),
           session_id: sessionId,
           character: currentCharacter,
           message
         })
       });
       
-
       if (!res.ok) {
         throw new Error(`HTTP hata! Durum: ${res.status}`);
       }
@@ -211,20 +314,20 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
-  
-  // Konuşmayı sonlandır fonksiyonu
-  function endConversation() {
-    isConversationActive = false;
-    document.querySelector(".chat-container").classList.add("conversation-ended");
-    messageInput.disabled = true;
-    sendBtn.disabled = true;
+
+  // Konuşma geçmişi butonuna tıklama olayı
+  const historyBtn = document.getElementById("historyBtn");
+  if (historyBtn) {
+    historyBtn.addEventListener("click", () => {
+      loadChatHistory();
+      document.getElementById("historySidebar").classList.toggle("open");
+    });
   }
-  
-  // Konuşmayı aktifleştir fonksiyonu
-  function enableConversation() {
-    isConversationActive = true;
-    document.querySelector(".chat-container").classList.remove("conversation-ended");
-    messageInput.disabled = false;
-    sendBtn.disabled = false;
+
+  // Önceki oturumu yükle (eğer var ise)
+  if (sessionId && userId) {
+    setTimeout(() => {
+      loadPreviousSession(sessionId);
+    }, 300); // DOM tamamen oturduktan sonra çalışsın diye
   }
 });

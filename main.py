@@ -6,7 +6,9 @@ from fastapi.templating import Jinja2Templates
 from fastapi import Depends
 from pydantic import BaseModel
 from database import create_user, get_user
-
+from fastapi import Query
+from database import get_all_conversations 
+from database import get_full_conversation
 from schemas import QuestionRequest, QuestionResponse, ChatRequest, ChatResponse
 from gemini import generate_questions, start_conversation
 from database import init_db
@@ -39,7 +41,7 @@ app.add_middleware(
 def chat_page(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-
+"""
 # Eski sistem: Konuya özel 3 soru üret
 @app.post("/ask", response_model=QuestionResponse)
 async def ask_questions(payload: QuestionRequest):
@@ -50,6 +52,7 @@ async def ask_questions(payload: QuestionRequest):
         raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Sunucu hatası: " + str(e))
+"""
 
 # Yeni sistem: Karakterle sürekli konuşma
 @app.post("/chat", response_model=ChatResponse)
@@ -104,3 +107,20 @@ def register_page(request: Request):
 @app.get("/", response_class=HTMLResponse)
 def home_redirect(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
+
+@app.get("/chat-history/{user_id}")
+def chat_history(user_id: int):
+    try:
+        history = get_all_conversations(user_id)
+        return {"sessions": history}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+@app.get("/chat-messages/{user_id}/{session_id}")
+def get_session_messages(user_id: int, session_id: str):
+    try:
+        messages = get_full_conversation(user_id, session_id)
+        return {"messages": messages}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

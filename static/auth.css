@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  margin: 0;
+}
+
+.auth-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  flex-direction: row-reverse;
+}
+
+.auth-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  padding: 2rem;
+}
+
+.auth-content {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+.auth-left h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #111;
+  text-align: center;
+}
+
+.auth-left p {
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+  color: #666;
+  text-align: center;
+}
+
+.auth-left form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.form-group {
+  width: 100%;
+}
+
+.auth-left input {
+  padding: 12px 14px;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  transition: border-color 0.3s;
+}
+
+.auth-left input:focus {
+  outline: none;
+  border-color: #518ed3;
+}
+
+.auth-left button {
+  padding: 12px;
+  background-color: #518ed3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 100%;
+  font-weight: 600;
+}
+
+.auth-left button:hover {
+  background-color: #28837d;
+}
+
+.auth-left .footer-text {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.auth-left .footer-text a {
+  color: #134e4a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-left .footer-text a:hover {
+  text-decoration: underline;
+}
+
+.auth-right {
+  flex: 1;
+  background-image: url("/static/auth.png");
+  background-size: cover;
+  background-position: center;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+/* Tablet ve Daha Küçük Ekranlar */
+@media (max-width: 992px) {
+  .auth-container {
+    flex-direction: column;
+  }
+
+  .auth-right {
+    height: 300px;
+    border-radius: 0;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+
+  .auth-left {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Mobil Ekranlar */
+@media (max-width: 576px) {
+  .auth-content {
+    padding: 10px;
+  }
+  
+  .auth-right {
+    height: 200px;
+  }
+
+  .auth-left h2 {
+    font-size: 1.5rem;
+  }
+
+  .auth-left p {
+    font-size: 0.9rem;
+  }
+
+  .auth-left button, 
+  .auth-left input {
+    padding: 10px 12px;
+  }
+}
