@@ -33,11 +33,11 @@ def init_db():
 
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS session_scores (
-         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         session_id TEXT NOT NULL,
         character TEXT NOT NULL,
-        score INTEGER NOT NULL,
+        avg_score REAL NOT NULL,
         timestamp TEXT NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id)
     )
