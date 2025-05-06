@@ -29,7 +29,38 @@
       <h1>Feynman Tekniği ile Öğren</h1>
       <p>Karmaşık konuları basitleştirmenin en etkili yolu</p>
     </header>
-
+    <div class="onboarding-carousel">
+      <div class="carousel-cards">
+        <!-- Kart 1 -->
+        <div class="carousel-card active">
+          <h2>Hemen Başla</h2>
+          <p>Öğrenmek istediğin konuyu seç ve karakterlerimizle sohbet etmeye başla!</p>
+          <a href="/chat" class="cta-button">Sohbete Başla</a>
+        </div>
+    
+        <!-- Kart 2 -->
+        <div class="carousel-card">
+          <h2>Nasıl Kullanılır?</h2>
+          <p>Uygulamayı daha yakından tanımak için demo videoyu izleyebilirsin.</p>
+          <a href="https://www.youtube.com/watch?v=DEMO_VIDEO_ID" target="_blank" class="cta-button">Demo Videosu</a>
+        </div>
+    
+        <!-- Kart 3 -->
+        <div class="carousel-card">
+          <h2>Feynman Yaklaşımı</h2>
+          <p>Feynman tekniğiyle basit ama derinlemesine öğrenmeyi keşfet.</p>
+        </div>
+      </div>
+    
+      <!-- Dots -->
+      <div class="carousel-controls">
+        <button class="dot active" data-index="0"></button>
+        <button class="dot" data-index="1"></button>
+        <button class="dot" data-index="2"></button>
+      </div>
+    </div>
+    
+    
     <div class="onboarding-content">
       <div class="onboarding-section">
         <h2>Feynman Tekniği Nedir?</h2>
@@ -68,12 +99,18 @@
         </div>
       </div>
       
-      <div class="onboarding-quote">
-        <blockquote>
-          "Eğer bir şeyi basitçe anlatamazsanız, onu yeterince iyi anlamamışsınız demektir."
+      <div class="quote-card">
+        <div class="quote-icon">
+          <img src="/static/favicon.png" alt="Favicon" />
+        </div>
+        <div class="quote-content">
+          <blockquote>
+            “Eğer bir şeyi basitçe anlatamazsanız, onu yeterince iyi anlamamışsınız demektir.”
+          </blockquote>
           <cite>— Richard Feynman</cite>
-        </blockquote>
+        </div>
       </div>
+      
       
       <div class="onboarding-cta">
         <h3>Hemen Başla</h3>
@@ -94,6 +131,21 @@
     if (!localStorage.getItem("feynmanChatUserId")) {
       window.location.href = "/login";
     }
+    document.querySelectorAll('.carousel-controls .dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      const index = parseInt(dot.getAttribute('data-index'));
+
+      // Kartları güncelle
+      document.querySelectorAll('.carousel-card').forEach((card, i) => {
+        card.classList.toggle('active', i === index);
+      });
+
+      // Dot'ları güncelle
+      document.querySelectorAll('.carousel-controls .dot').forEach((d, i) => {
+        d.classList.toggle('active', i === index);
+      });
+    });
+    });
   </script>
 </body>
 </html>
