@@ -447,6 +447,143 @@ header p {
   --text-color: #333333;
 }
 */
+/* === Karakterler Sayfası İçin Stiller (characters.html) === */
+
+.character-detail-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-lg, 20px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-lg, 20px);
+}
+
+
+/* Genişletilmiş container sadece index için */
+.wide-container {
+  max-width: 1100px; /* Daha geniş yap */
+  width: 100%;
+}
+
+.character-detail-card {
+  background-color: var(--surface, #fff);
+  border-radius: var(--radius-md, 8px);
+  box-shadow: var(--shadow-md, 0 2px 10px rgba(0, 0, 0, 0.1));
+  padding: var(--space-lg, 20px);
+  /* Üç kartın yan yana sığması için genişlik ayarı (aradaki boşluklar düşülerek) */
+  width: calc(45% - var(--space-lg, 20px));
+  box-sizing: border-box; /* Padding ve border'ın genişliğe dahil edilmesini sağlar */
+  display: flex;
+  flex-direction: column; /* Kart içeriğini dikeyde sıralar */
+  align-items: center; /* Başlık ve resim gibi öğeleri ortalar */
+  text-align: center; /* Kart içindeki metinleri genel olarak ortalar */
+  margin-bottom: var(--space-lg, 20px); /* Kartlar arasında dikey boşluk (wrap durumunda) */
+}
+
+/* Orta boy ekranlar için (örneğin tabletler): 2 kart yan yana */
+@media (max-width: 992px) {
+  .character-detail-card {
+    width: calc(50% - (var(--space-lg, 20px) / 2));
+  }
+}
+
+/* Küçük ekranlar için (örneğin telefonlar): Kartlar alt alta */
+@media (max-width: 768px) {
+  .character-detail-card {
+    width: 100%; /* Tek kart tam genişlikte */
+  }
+  .character-detail-section {
+    justify-content: center; /* Tek kart varken ortalamak için */
+  }
+}
+
+.character-detail-card .character-detail-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: var(--space-md, 15px);
+}
+
+/* Karakter resmi alanı */
+.character-detail-card .character-image.large {
+  width: 100%; /* Resim konteyneri kartın başlık bölümünün genişliğini alır */
+  max-width: 220px; /* Resmin maksimum genişliği, "büyük kart" hissiyatı için ayarlayabilirsiniz */
+  height: auto;
+  margin: 0 auto var(--space-md, 15px); /* Resmi ortalar ve altına boşluk bırakır */
+  border-radius: var(--radius-sm, 4px); /* Hafifçe yuvarlatılmış köşeler (isteğe bağlı, 0px da olabilir) */
+  overflow: hidden; /* Resmin köşeleri konteynerin yuvarlaklığına uymasını sağlar */
+  background-color: transparent; /* Varsa önceki arka planı kaldırır */
+}
+
+/* Karakter resmi */
+.character-detail-card .character-image.large img {
+  width: 100%; /* Resim kendi konteynerinin tamamını kaplar */
+  height: auto;  /* Resmin en-boy oranını korur */
+  object-fit: contain; /* Resmin tamamı görünür, kırpma olmaz, en-boy oranı farkı varsa boşluk kalabilir */
+  display: block; /* Resmin altında oluşabilecek fazladan boşluğu kaldırır */
+  border-radius: 0; /* Resmin kendisine ayrıca köşe yuvarlaklığı gerekmez */
+}
+
+.character-detail-card .character-detail-header h2 {
+  color: var(--primary, #3498db);
+  font-size: 1.6rem; /* Karakter ismi boyutu */
+  margin-top: 0;
+  margin-bottom: var(--space-sm, 10px);
+}
+
+.character-detail-card .character-detail-body {
+  width: 100%; /* Bilgi bölümü kartın tam genişliğini alır */
+  text-align: left; /* Bilgi metinlerini sola hizalar */
+}
+
+.character-detail-card .character-detail-body h3 {
+  font-size: 1.1rem;
+  color: var(--text, #333);
+  margin-top: var(--space-md, 15px);
+  margin-bottom: var(--space-xs, 5px);
+  border-bottom: 1px solid var(--border, #ddd);
+  padding-bottom: var(--space-xs, 5px);
+}
+
+.character-detail-card .character-detail-body p {
+  font-size: 0.9rem; /* Paragraf metin boyutu */
+  color: var(--gray-500, #7f8c8d);
+  margin-bottom: var(--space-sm, 10px);
+  line-height: 1.6;
+}
+
+.character-detail-card .character-quote {
+  font-style: italic;
+  color: var(--gray-500, #7f8c8d);
+  padding: var(--space-sm, 10px);
+  margin: var(--space-md, 15px) 0;
+  border-left: 3px solid var(--primary, #3498db);
+  background-color: rgba(52, 152, 219, 0.05); /* Açık renkli bir arka plan */
+  text-align: center; /* Alıntıyı ortalar */
+  font-size: 0.9rem;
+  width: 100%; /* Alıntı bloğunun genişliği */
+  box-sizing: border-box;
+}
+
+.character-detail-card .character-chat-btn {
+  display: inline-block;
+  background-color: var(--primary, #3498db);
+  color: white;
+  padding: var(--space-sm, 10px) var(--space-lg, 20px);
+  text-decoration: none;
+  border-radius: var(--radius-sm, 4px);
+  font-weight: 600;
+  text-align: center;
+  margin-top: var(--space-md, 15px);
+  transition: background-color 0.3s ease;
+  align-self: center; /* Butonu kart içinde yatayda ortalar (flex container içinde olduğu için) */
+}
+
+.character-detail-card .character-chat-btn:hover {
+  background-color: var(--primary-dark, #2980b9);
+}
+
+/* === Karakterler Sayfası Stillerinin Sonu === */
 #message {
   flex: 1;
   padding: 12px;
