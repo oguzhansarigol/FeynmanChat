@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Öğrenmeye Başla - FeynmanChat</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="icon" type="image/png" href="/static/favicon.png">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="/chat" class="brand">FeynmanChat</a>
+    </div>
+    <div class="nav-center">
+      <a href="/chat" class="nav-link">Chat</a>
+      <a href="/characters" class="nav-link">Karakterler</a>
+      <a href="/onboarding" class="nav-link active">Öğren</a>
+    </div>
+    <div class="nav-right">
+      <button onclick="logout()" class="logout-btn">Çıkış Yap</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header>
+      <h1>Feynman Tekniği ile Öğren</h1>
+      <p>Karmaşık konuları basitleştirmenin en etkili yolu</p>
+    </header>
+
+    <div class="onboarding-content">
+      <div class="onboarding-section">
+        <h2>Feynman Tekniği Nedir?</h2>
+        <p>Nobel ödüllü fizikçi Richard Feynman tarafından geliştirilen bu öğrenme tekniği, karmaşık kavramları anlayabilmenin ve açıklayabilmenin en etkili yollarından biridir. Temel prensibi şudur: "Eğer bir konuyu başkasına öğretemiyorsan, gerçekten anlamamışsın demektir."</p>
+        
+        <div class="onboarding-steps">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>Konuyu Seç</h3>
+            <p>Öğrenmek istediğin konuyu belirle ve FeynmanChat karakterlerinden biriyle sohbet et.</p>
+          </div>
+          
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>Basit Anlatmaya Çalış</h3>
+            <p>Konuyu sanki bir çocuğa anlatıyormuş gibi, en basit terimlerle açıklamaya çalış.</p>
+          </div>
+          
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>Zorlandığın Yerleri Belirle</h3>
+            <p>Hangi noktalarda açıklama yapmakta zorlandığını fark et. Bu, derin anlayışının eksik olduğu kısımları gösterir.</p>
+          </div>
+          
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <h3>Konuyu Tekrar Çalış</h3>
+            <p>Zorlandığın konuları tekrar gözden geçir ve araştır. Farklı karakterlerle sohbet ederek konuyu farklı açılardan anlamaya çalış.</p>
+          </div>
+          
+          <div class="step-card">
+            <div class="step-number">5</div>
+            <h3>Basitleştir ve Tekrar Et</h3>
+            <p>Konu hakkındaki bilgilerini özetleyerek ve metaforlar kullanarak tekrar anlat. FeynmanChat karakterleri sana bu süreçte yardımcı olacaktır.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="onboarding-quote">
+        <blockquote>
+          "Eğer bir şeyi basitçe anlatamazsanız, onu yeterince iyi anlamamışsınız demektir."
+          <cite>— Richard Feynman</cite>
+        </blockquote>
+      </div>
+      
+      <div class="onboarding-cta">
+        <h3>Hemen Başla</h3>
+        <p>Öğrenmek istediğin konuyu seç ve karakterlerimizle sohbet etmeye başla!</p>
+        <a href="/chat" class="cta-button">Sohbete Başla</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function logout() {
+      localStorage.removeItem("feynmanChatUserId");
+      localStorage.removeItem("feynmanChatSessionId");
+      window.location.href = "/login";
+    }
+
+    // Check if user is logged in
+    if (!localStorage.getItem("feynmanChatUserId")) {
+      window.location.href = "/login";
+    }
+  </script>
+</body>
+</html>

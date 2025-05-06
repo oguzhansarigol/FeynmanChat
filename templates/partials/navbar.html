@@ -1,0 +1,24 @@
+<!-- templates/partials/navbar.html -->
+<nav class="navbar">
+    <div class="nav-left">
+      <a href="/chat" class="brand">
+        <i class="fas fa-comment-dots"></i> FeynmanChat
+      </a>
+    </div>
+    <div class="nav-center">
+      <a href="/chat" class="nav-link {% if request.path == '/chat' %}active{% endif %}">
+        <i class="fas fa-comments"></i> Chat
+      </a>
+      <a href="/characters" class="nav-link {% if request.path == '/characters' %}active{% endif %}">
+        <i class="fas fa-users"></i> Karakterler
+      </a>
+      <a href="/onboarding" class="nav-link {% if request.path == '/onboarding' %}active{% endif %}">
+        <i class="fas fa-graduation-cap"></i> Öğren
+      </a>
+    </div>
+    <div class="nav-right">
+      <button onclick="logout()" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+      </button>
+    </div>
+  </nav>

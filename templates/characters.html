@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Karakterler - FeynmanChat</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="icon" type="image/png" href="/static/favicon.png">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="/chat" class="brand">FeynmanChat</a>
+    </div>
+    <div class="nav-center">
+      <a href="/chat" class="nav-link">Chat</a>
+      <a href="/characters" class="nav-link active">Karakterler</a>
+      <a href="/onboarding" class="nav-link">Öğren</a>
+    </div>
+    <div class="nav-right">
+      <button onclick="logout()" class="logout-btn">Çıkış Yap</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header>
+      <h1>Feynman Karakterleri</h1>
+      <p>Her bir karakterin öğrenme metodunu keşfedin</p>
+    </header>
+
+    <div class="character-detail-section">
+      <!-- Meraklı Çocuk -->
+      <div class="character-detail-card">
+        <div class="character-detail-header">
+          <div class="character-image large">
+            <img src="/static/images/cocuk.png" alt="Meraklı Çocuk" onerror="this.src='/static/images/placeholder-cocuk.png'">
+          </div>
+          <h2>Meraklı Çocuk</h2>
+        </div>
+        <div class="character-detail-body">
+          <h3>Öğrenme Stili</h3>
+          <p>Basit sorularla karmaşık konuları temelden anlamaya çalışır. "Neden?" sorusunu sıklıkla sorar ve konunun en temel prensiplerini anlamak ister.</p>
+          
+          <h3>Ne Zaman Tercih Edilmeli?</h3>
+          <p>Yeni bir konuyu öğrenmeye başlarken veya karmaşık bir konuyu en basit haliyle anlamak istediğinizde.</p>
+          
+          <div class="character-quote">
+            "En büyük bilgelik, en basit sorularla başlar."
+          </div>
+          
+          <a href="/chat" class="character-chat-btn" data-character="cocuk">Bu Karakterle Sohbet Et</a>
+        </div>
+      </div>
+      
+      <!-- Araştırmacı Öğrenci -->
+      <div class="character-detail-card">
+        <div class="character-detail-header">
+          <div class="character-image large">
+            <img src="/static/images/universiteli.png" alt="Araştırmacı Öğrenci" onerror="this.src='/static/images/placeholder-universiteli.png'">
+          </div>
+          <h2>Araştırmacı Öğrenci</h2>
+        </div>
+        <div class="character-detail-body">
+          <h3>Öğrenme Stili</h3>
+          <p>Bilgiyi derinlemesine araştırır, farklı kaynakları karşılaştırır ve pratik uygulama alanlarını keşfeder. Sorularını detaylı şekilde sorar ve konu ile ilgili farklı bakış açılarını inceler.</p>
+          
+          <h3>Ne Zaman Tercih Edilmeli?</h3>
+          <p>Bir konuyu orta seviyede anladığınızda ve bilgilerinizi derinleştirmek istediğinizde.</p>
+          
+          <div class="character-quote">
+            "Öğrenmenin en etkili yolu, soru sormak ve cevapları araştırmaktır."
+          </div>
+          
+          <a href="/chat" class="character-chat-btn" data-character="universiteli">Bu Karakterle Sohbet Et</a>
+        </div>
+      </div>
+      
+      <!-- Profesör -->
+      <div class="character-detail-card">
+        <div class="character-detail-header">
+          <div class="character-image large">
+            <img src="/static/images/hoca.png" alt="Profesör" onerror="this.src='/static/images/placeholder-hoca.png'">
+          </div>
+          <h2>Profesör</h2>
+        </div>
+        <div class="character-detail-body">
+          <h3>Öğrenme Stili</h3>
+          <p>İleri düzey bilgileri sistematik bir şekilde analiz eder. Konuları derinlemesine irdeler, ileri kavramları açıklar ve bunlar arasındaki ilişkileri gösterir. Ayrıca konunun tarihsel gelişimini ve güncel araştırmaları da paylaşır.</p>
+          
+          <h3>Ne Zaman Tercih Edilmeli?</h3>
+          <p>Bir konuyu ileri seviyede anlamak istediğinizde veya uzmanlık gerektiren bilgilere ihtiyacınız olduğunda.</p>
+          
+          <div class="character-quote">
+            "Bir konuyu gerçekten anlamak, onu başkasına öğretebilecek kadar özümsemektir."
+          </div>
+          
+          <a href="/chat" class="character-chat-btn" data-character="hoca">Bu Karakterle Sohbet Et</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function logout() {
+      localStorage.removeItem("feynmanChatUserId");
+      localStorage.removeItem("feynmanChatSessionId");
+      window.location.href = "/login";
+    }
+
+    // Character buttons
+    document.querySelectorAll('.character-chat-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const character = this.getAttribute('data-character');
+        localStorage.setItem('feynmanChatSelectedCharacter', character);
+        window.location.href = '/chat';
+      });
+    });
+
+    // Check if user is logged in
+    if (!localStorage.getItem("feynmanChatUserId")) {
+      window.location.href = "/login";
+    }
+  </script>
+</body>
+</html>

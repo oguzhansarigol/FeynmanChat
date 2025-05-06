@@ -7,7 +7,29 @@
   <link rel="stylesheet" href="/static/style.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   <link rel="icon" type="image/png" href="/static/favicon.png">
-
+  <style>
+    .character-selection {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+    }
+    
+    .chat-container {
+      width: 100%;
+      height: 60vh;
+      min-height: 500px;
+    }
+    
+    .main-content {
+      width: 100%;
+    }
+    
+    @media (max-width: 768px) {
+      .character-selection {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
@@ -21,10 +43,23 @@
 
     <!-- Sağ: Ana içerik -->
     <div class="main-content">
+      <!-- Navbar -->
+      <nav class="navbar">
+        <div class="nav-left">
+          <a href="/chat" class="brand">FeynmanChat</a>
+        </div>
+        <div class="nav-center">
+          <a href="/chat" class="nav-link active">Chat</a>
+          <a href="/characters" class="nav-link">Karakterler</a>
+          <a href="/onboarding" class="nav-link">Öğren</a>
+        </div>
+        <div class="nav-right">
+          <button onclick="logout()" class="logout-btn">Çıkış Yap</button>
+        </div>
+      </nav>
+
       <div class="container">
         <header>
-          <h1>FeynmanChat</h1>
-          <button onclick="logout()" class="logout-btn">Çıkış Yap</button>
           <p>Farklı karakterlerle soru-cevap yaparak öğrenin</p>
         </header>
 
@@ -89,6 +124,20 @@
     if (!localStorage.getItem("feynmanChatUserId")) {
       window.location.href = "/login";
     }
+    
+    // Check if a character was pre-selected from another page
+    document.addEventListener("DOMContentLoaded", function() {
+      const selectedCharacter = localStorage.getItem('feynmanChatSelectedCharacter');
+      if (selectedCharacter) {
+        // Find and simulate click on the relevant character card
+        const characterCard = document.querySelector(`.character-card[data-character="${selectedCharacter}"]`);
+        if (characterCard) {
+          characterCard.click();
+        }
+        // Clear the selection so it doesn't affect future page loads
+        localStorage.removeItem('feynmanChatSelectedCharacter');
+      }
+    });
   </script>
 
   <script src="/static/script.js"></script>

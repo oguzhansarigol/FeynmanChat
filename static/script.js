@@ -282,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
           Konuşma sonlandırıldı. Yeni bir konuşma başlatmak için karakter seçin.
         </div>
       </div>
-      <button class="new-conversation-btn">Yeni Konuşma Başlat</button>
+      <button class="new-conversation-btn">Bir Karakter Seçiniz</button>
     `;
     
     chatBox.scrollTop = chatBox.scrollHeight;

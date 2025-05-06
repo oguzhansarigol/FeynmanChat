@@ -124,3 +124,12 @@ def get_session_messages(user_id: int, session_id: str):
         return {"messages": messages}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+ 
+@app.get("/characters", response_class=HTMLResponse)
+def characters_page(request: Request):
+    return templates.TemplateResponse("characters.html", {"request": request})
+
+@app.get("/onboarding", response_class=HTMLResponse)
+def onboarding_page(request: Request):
+    return templates.TemplateResponse("onboarding.html", {"request": request})
